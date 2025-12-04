@@ -273,7 +273,7 @@
           </div>
 
           <div class="col-lg-8">
-            <form action="https://script.google.com/macros/s/AKfycbydm90zln7XwlRjo9QG__a5TkhoCDUKQYFRcMpuGi1fMZLqioxfVHUqspkHZxUc20UajQ/exec" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+            <form action="https://script.google.com/macros/s/AKfycbyJNeg1SHLguFISMofbvN2joHCxIpySrQOI66WF7mMHWOAiLmasa4UQ9IunCBNeeCISNQ/exec" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
               <input type="hidden" name="formType" value="contact">
               <div class="row gy-4">
 
@@ -359,7 +359,7 @@
             <h4>Newsletter</h4>
             <p>Subscreva para receber novidades, lançamentos e convites para testes early-access.</p>
             <!-- Newsletter aponta para o Google Apps Script Web App -->
-            <form action="https://script.google.com/macros/s/AKfycbydm90zln7XwlRjo9QG__a5TkhoCDUKQYFRcMpuGi1fMZLqioxfVHUqspkHZxUc20UajQ/exec" method="post" class="php-email-form">
+            <form action="https://script.google.com/macros/s/AKfycbyJNeg1SHLguFISMofbvN2joHCxIpySrQOI66WF7mMHWOAiLmasa4UQ9IunCBNeeCISNQ/exec" method="post" class="php-email-form">
               <div class="newsletter-form">
                 <input type="email" name="email" placeholder="O seu email" required>
                 <input type="hidden" name="formType" value="newsletter">
@@ -402,54 +402,58 @@
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
 
-  <!-- Forms integration script (submete para o Google Apps Script com fetch e tratamento de erro) -->
+  <!-- Forms integration script - submissão via iframe (sem CORS) -->
+  <iframe name="form_iframe" id="form_iframe" style="display:none;"></iframe>
   <script>
   (function(){
     var forms = document.querySelectorAll('form[action*="script.google.com"]');
     if (!forms || forms.length === 0) return;
 
     forms.forEach(function(form){
+      // adiciona target ao iframe
+      form.setAttribute('target', 'form_iframe');
+
       form.addEventListener('submit', function(e){
-        e.preventDefault(); // evita submissão normal do form
+        window._lastForm = form;
 
         var loading = form.querySelector('.loading');
         var error = form.querySelector('.error-message');
         var sent = form.querySelector('.sent-message');
         var submitBtn = form.querySelector('[type="submit"]');
 
-        // limpa mensagens anteriores
         if (error) error.style.display = 'none';
         if (sent) sent.style.display = 'none';
         if (loading) loading.style.display = 'block';
         if (submitBtn) submitBtn.disabled = true;
 
-        // FormData do form
-        var formData = new FormData(form);
-
-        // tenta fetch com modo no-cors (envio sem ler resposta)
-        fetch(form.action, { method: 'POST', body: formData, mode: 'no-cors' })
-          .then(function(){
-            // fetch sucesso (mesmo com no-cors, o servidor recebeu)
-            setTimeout(function(){
-              if (loading) loading.style.display = 'none';
-              if (sent) sent.style.display = 'block';
-              if (submitBtn) submitBtn.disabled = false;
-              var emailInput = form.querySelector('input[type="email"]');
-              if (emailInput) emailInput.value = '';
-            }, 500);
-          })
-          .catch(function(err){
-            // erro de conectividade - mostra erro
-            console.error('Form submit error:', err);
-            if (loading) loading.style.display = 'none';
-            if (error) {
-              error.textContent = 'Erro ao enviar. Tente novamente.';
-              error.style.display = 'block';
-            }
-            if (submitBtn) submitBtn.disabled = false;
-          });
+        // timeout fallback (caso iframe não carregue)
+        form._timeout = setTimeout(function(){
+          if (loading) loading.style.display = 'none';
+          if (sent) sent.style.display = 'block';
+          if (submitBtn) submitBtn.disabled = false;
+          var email = form.querySelector('input[type="email"]');
+          if (email) email.value = '';
+        }, 3000);
       });
     });
+
+    // quando iframe carrega = form foi enviado
+    var iframe = document.getElementById('form_iframe');
+    if (iframe) {
+      iframe.addEventListener('load', function(){
+        var form = window._lastForm;
+        if (!form) return;
+        clearTimeout(form._timeout);
+        var loading = form.querySelector('.loading');
+        var sent = form.querySelector('.sent-message');
+        var submitBtn = form.querySelector('[type="submit"]');
+        if (loading) loading.style.display = 'none';
+        if (sent) sent.style.display = 'block';
+        if (submitBtn) submitBtn.disabled = false;
+        var email = form.querySelector('input[type="email"]');
+        if (email) email.value = '';
+      });
+    }
   })();
   </script>
 

@@ -177,7 +177,7 @@
           <div class="col-lg-4 col-md-12 footer-newsletter">
             <h4>Newsletter</h4>
             <p>Subscreva para receber novidades e atualizações sobre o lançamento da Ler+Saúde.</p>
-            <form action="https://script.google.com/macros/s/AKfycbxXvIg5EhMV4UhfJSrVWantazova9krfsZ-qPFcj7KSnQ4cgpt53W16Q5m1gdV4cNxlPA/exec" method="post" class="php-email-form">
+            <form action="https://script.google.com/macros/s/AKfycbyJNeg1SHLguFISMofbvN2joHCxIpySrQOI66WF7mMHWOAiLmasa4UQ9IunCBNeeCISNQ/exec" method="post" class="php-email-form">
               <div class="newsletter-form"><input type="email" name="email"><input type="hidden" name="formType" value="newsletter"><input type="submit" value="Subscrever"></div>
               <div class="loading" style="display:none;">A processar</div>
               <div class="error-message" style="display:none;"></div>
@@ -228,8 +228,9 @@
     var forms = document.querySelectorAll('form[action*="script.google.com"]');
     if (!forms || forms.length === 0) return;
     forms.forEach(function(form){
+      form.setAttribute('target', 'form_iframe');
       form.addEventListener('submit', function(e){
-        e.preventDefault();
+        window._lastForm = form;
         var loading = form.querySelector('.loading');
         var error = form.querySelector('.error-message');
         var sent = form.querySelector('.sent-message');
@@ -238,28 +239,38 @@
         if (sent) sent.style.display = 'none';
         if (loading) loading.style.display = 'block';
         if (submitBtn) submitBtn.disabled = true;
-        var formData = new FormData(form);
-        fetch(form.action, { method: 'POST', body: formData, mode: 'no-cors' })
-          .then(function(){
-            setTimeout(function(){
-              if (loading) loading.style.display = 'none';
-              if (sent) sent.style.display = 'block';
-              if (submitBtn) submitBtn.disabled = false;
-              var emailInput = form.querySelector('input[type="email"]');
-              if (emailInput) emailInput.value = '';
-            }, 500);
-          })
-          .catch(function(err){
-            console.error('Form error:', err);
-            if (loading) loading.style.display = 'none';
-            if (error) {
-              error.textContent = 'Erro ao enviar. Tente novamente.';
-              error.style.display = 'block';
-            }
-            if (submitBtn) submitBtn.disabled = false;
-          });
+        form._timeout = setTimeout(function(){
+          if (loading) loading.style.display = 'none';
+          if (sent) sent.style.display = 'block';
+          if (submitBtn) submitBtn.disabled = false;
+          var email = form.querySelector('input[type="email"]');
+          if (email) email.value = '';
+        }, 3000);
       });
     });
+    var iframe = document.getElementById('form_iframe');
+    if (!iframe) {
+      iframe = document.createElement('iframe');
+      iframe.name = 'form_iframe';
+      iframe.id = 'form_iframe';
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+    }
+    if (iframe) {
+      iframe.addEventListener('load', function(){
+        var form = window._lastForm;
+        if (!form) return;
+        clearTimeout(form._timeout);
+        var loading = form.querySelector('.loading');
+        var sent = form.querySelector('.sent-message');
+        var submitBtn = form.querySelector('[type="submit"]');
+        if (loading) loading.style.display = 'none';
+        if (sent) sent.style.display = 'block';
+        if (submitBtn) submitBtn.disabled = false;
+        var email = form.querySelector('input[type="email"]');
+        if (email) email.value = '';
+      });
+    }
   })();
   </script>
 
