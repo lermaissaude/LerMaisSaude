@@ -63,8 +63,22 @@
 
 /* Hide video wrapper */
 .hero-video-wrapper {
-  display: none !important;
+  position: relative;   /* torna possível posicionar conteúdo sobre o vídeo */
+  width: 100%;
+  height: 100vh;        /* altura da viewport */
+  overflow: hidden;
 }
+
+.hero-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;   /* para ficar em segundo plano */
+  top: 0;
+  left: 0;
+  z-index: 1;           /* vídeo fica atrás do conteúdo */
+}
+
 
 /*--------------------------------------------------------------
 # General Styling & Shared Classes
@@ -178,12 +192,16 @@ h6 {
   /* Smaller logo icon: reduced for better balance */
   .logo-img { width: 55px; max-height: 55px; height: auto; display:inline-block; margin-right:8px; }
 
-  .header .logo h1 {
+.header .logo h1 {
   font-size: 32px;
   margin: 0;
   font-weight: 700;
-    color: var(--heading-color);
-    font-family: 'Montserrat', var(--nav-font);
+  color: #004aad;
+  font-family: 'Montserrat', var(--nav-font); 
+  display: inline-block; /* faz o fundo caber apenas ao redor do texto */
+  padding: 4px 10px; /* espaçamento horizontal/vertical da barra */
+  border-radius: 4px; /* cantos ligeiramente arredondados */
+  line-height: 1; /* garante alinhamento vertical consistente */
 }
 
 .header .logo span {
@@ -939,7 +957,7 @@ section,
   content: "";
   /* hero::before is a subtle overlay on top of the video overlay (video-specific overlay is --hero-overlay-opacity),
      we use a fraction to avoid doubling the darkness */
-  background: rgba(0,0,0, calc(var(--hero-overlay-opacity) * 0.35));
+  background: color-mix(in srgb, var(--background-color), transparent 30%);
   position: absolute;
   inset: 0;
   z-index: 2;

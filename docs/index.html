@@ -66,58 +66,54 @@
     <!-- Hero Section -->
     <section id="hero" class="hero section dark-background">
 
-    <div class="hero-video-wrapper" style="display:none;">
-      <video id="hero-video-local" class="video-bg" autoplay muted loop playsinline preload="metadata" poster="assets/media/hero-poster.jpg">
-        <source src="assets/Vídeo WhatsApp 2025-11-28 às 11.31.55_501bd359.mp4" type="video/mp4">
-        <!-- fallback: imagem -->
-        Your browser does not support HTML5 video. <img src="assets/img/about.jpg" alt="Hero fallback">
-      </video>
-      <div class="video-overlay"></div>
-    </div>
+      <div class="hero-video-wrapper">
+        <video autoplay loop muted playsinline class="hero-video">
+          <source src="assets/img/videoinicial.mp4" type="video/mp4">
+        </video>
 
-      <div class="container">
+        <div class="container">
 
-        <div class="row justify-content-center text-center" data-aos="fade-up" data-aos-delay="100">
-          <div class="col-xl-6 col-lg-8">
-            <h2>Ler+Saúde</h2>
-            <p>Torne relatórios e exames fáceis de entender.</p>
-            <!-- Hero CTA buttons removed per request -->
+          <div class="row justify-content-center text-center" data-aos="fade-up" data-aos-delay="100">
+            <div class="col-xl-6 col-lg-8">
+              <h2>Ler+Saúde</h2>
+              <p>Torne relatórios e exames fáceis de entender.</p>
+              <!-- Hero CTA buttons removed per request -->
+            </div>
           </div>
-        </div>
 
-        <div class="row gy-4 mt-5 justify-content-center" data-aos="fade-up" data-aos-delay="200">
-          <div class="col-xl-2 col-md-4" data-aos="fade-up" data-aos-delay="300">
-            <div class="icon-box">
-              <i class="bi bi-file-earmark-medical"></i>
-              <h3><a href="">Explicações Claras</a></h3>
-            </div>
-          </div>
-          <div class="col-xl-2 col-md-4" data-aos="fade-up" data-aos-delay="400">
+          <div class="row gy-4 mt-5 justify-content-center" data-aos="fade-up" data-aos-delay="200">
+            <div class="col-xl-2 col-md-4" data-aos="fade-up" data-aos-delay="300">
               <div class="icon-box">
-              <i class="bi bi-gear"></i>
-              <h3><a href="">Integração Fácil</a></h3>
+                <i class="bi bi-file-earmark-medical"></i>
+                <h3><a href="">Explicações Claras</a></h3>
+              </div>
             </div>
-          </div>
-          <div class="col-xl-2 col-md-4" data-aos="fade-up" data-aos-delay="500">
-              <div class="icon-box">
-              <i class="bi bi-shield-check"></i>
-              <h3><a href="">Seguro e Validado</a></h3>
+            <div class="col-xl-2 col-md-4" data-aos="fade-up" data-aos-delay="400">
+                <div class="icon-box">
+                <i class="bi bi-gear"></i>
+                <h3><a href="">Integração Fácil</a></h3>
+              </div>
             </div>
-          </div>
-          <div class="col-xl-2 col-md-4" data-aos="fade-up" data-aos-delay="600">
-              <div class="icon-box">
-              <i class="bi bi-people"></i>
-              <h3><a href="">Foco no Paciente</a></h3>
+            <div class="col-xl-2 col-md-4" data-aos="fade-up" data-aos-delay="500">
+                <div class="icon-box">
+                <i class="bi bi-shield-check"></i>
+                <h3><a href="">Seguro e Validado</a></h3>
+              </div>
             </div>
-          </div>
-          <div class="col-xl-2 col-md-4" data-aos="fade-up" data-aos-delay="700">
-              <div class="icon-box">
-              <i class="bi bi-graph-up"></i>
-              <h3><a href="">Escalável</a></h3>
+            <div class="col-xl-2 col-md-4" data-aos="fade-up" data-aos-delay="600">
+                <div class="icon-box">
+                <i class="bi bi-people"></i>
+                <h3><a href="">Foco no Paciente</a></h3>
+              </div>
+            </div>
+            <div class="col-xl-2 col-md-4" data-aos="fade-up" data-aos-delay="700">
+                <div class="icon-box">
+                <i class="bi bi-graph-up"></i>
+                <h3><a href="">Escalável</a></h3>
+              </div>
             </div>
           </div>
         </div>
-
       </div>
 
     </section><!-- /Hero Section -->
@@ -270,15 +266,16 @@
               <i class="bi bi-envelope flex-shrink-0"></i>
               <div>
                 <h3>Email</h3>
-                <p>geral@lersaude.pt</p>
+                <p>ler.mais.saude@gmail.com</p>
               </div>
             </div><!-- End Info Item -->
 
           </div>
 
           <div class="col-lg-8">
-            <form action="forms/contact.php" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+            <form id="contact-form" action="https://script.google.com/macros/s/AKfycbxXvIg5EhMV4UhfJSrVWantazova9krfsZ-qPFcj7KSnQ4cgpt53W16Q5m1gdV4cNxlPA/exec" method="post" target="newsletter_iframe" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
               <input type="hidden" name="page" id="contact-page" value="/">
+              <input type="hidden" name="formType" value="contact">
               <div class="row gy-4">
 
                 <div class="col-md-6">
@@ -304,9 +301,9 @@
                 </div>
 
                 <div class="col-md-12 text-center">
-                  <div class="loading">Loading</div>
-                  <div class="error-message"></div>
-                  <div class="sent-message">Your message has been sent. Thank you!</div>
+                  <div class="loading" style="display:none;">A processar</div>
+                  <div class="error-message" style="display:none;"></div>
+                  <div class="sent-message" style="display:none;">Obrigado! A sua mensagem foi enviada.</div>
 
                   <button type="submit">Enviar Mensagem</button>
                 </div>
@@ -333,7 +330,7 @@
             </a>
             <p class="mt-2">Ler+Saúde é uma API que transforma relatórios clínicos e exames em explicações fáceis de entender, com foco em precisão clínica e privacidade.</p>
             <div class="footer-contact pt-3">
-              <p class="mt-1"><strong>Contato:</strong> <span>geral@lersaude.pt</span></p>
+              <p class="mt-1"><strong>Contato:</strong> <span>ler.mais.saude@gmail.com</span></p>
               <p><strong>Telefone:</strong> <span>+351 21 000 0000</span></p>
             </div>
           </div>
@@ -362,12 +359,18 @@
           <div class="col-lg-4 col-md-12 footer-newsletter">
             <h4>Newsletter</h4>
             <p>Subscreva para receber novidades, lançamentos e convites para testes early-access.</p>
-            <form action="forms/newsletter.php" method="post" class="php-email-form">
-              <div class="newsletter-form"><input type="email" name="email" placeholder="O seu email"><input type="submit" value="Subscrever"></div>
-              <div class="loading">A processar</div>
-              <div class="error-message"></div>
-              <div class="sent-message">Obrigado! Entraremos em contacto em breve.</div>
+            <!-- Newsletter agora aponta para o Google Apps Script Web App -->
+            <form id="newsletter-form" action="https://script.google.com/macros/s/AKfycbxXvIg5EhMV4UhfJSrVWantazova9krfsZ-qPFcj7KSnQ4cgpt53W16Q5m1gdV4cNxlPA/exec" method="post" target="newsletter_iframe" class="php-email-form">
+              <div class="newsletter-form">
+                <input type="email" name="email" id="newsletter-email" placeholder="O seu email" required>
+                <input type="submit" id="newsletter-submit" value="Subscrever">
+              </div>
+              <div class="loading" style="display:none;">A processar</div>
+              <div class="error-message" style="display:none;"></div>
+              <div class="sent-message" style="display:none;">Obrigado! Verifique o seu email.</div>
             </form>
+            <!-- iframe oculto para evitar problemas de CORS ao submeter diretamente ao Apps Script -->
+            <iframe name="newsletter_iframe" id="newsletter_iframe" style="display:none;"></iframe>
           </div>
 
         </div>
@@ -400,6 +403,66 @@
 
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
+
+  <!-- Forms integration script (submete para o Google Apps Script via iframe para evitar CORS) -->
+  <script>
+  (function(){
+    var iframe = document.getElementById('newsletter_iframe');
+    if (!iframe) {
+      // fallback: cria iframe se não existir
+      iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.name = 'newsletter_iframe';
+      iframe.id = 'newsletter_iframe';
+      document.body.appendChild(iframe);
+    }
+
+    // Handler para forms que submetem ao Apps Script via iframe
+    var forms = document.querySelectorAll('form[target="newsletter_iframe"]');
+    if (!forms || forms.length === 0) return;
+
+    forms.forEach(function(form){
+      form.addEventListener('submit', function(e){
+        // recorda qual o form que submeteu - usado no evento load do iframe
+        window._lastFormSubmitted = form;
+
+        var loading = form.querySelector('.loading');
+        var error = form.querySelector('.error-message');
+        var sent = form.querySelector('.sent-message');
+        var submitBtn = form.querySelector('[type="submit"]');
+
+        if (error) error.style.display = 'none';
+        if (sent) sent.style.display = 'none';
+        if (loading) loading.style.display = 'block';
+        if (submitBtn) submitBtn.disabled = true;
+
+        // fallback: se o iframe não disparar load, mostramos sucesso passado X ms
+        form._newsletterTimeout = setTimeout(function(){
+          if (loading) loading.style.display = 'none';
+          if (sent) sent.style.display = 'block';
+          if (submitBtn) submitBtn.disabled = false;
+          var emailInput = form.querySelector('input[type="email"]');
+          if (emailInput) emailInput.value = '';
+        }, 4000);
+      });
+    });
+
+    // quando o iframe carrega, assume-se que o servidor respondeu — mostramos sucesso no último form submetido
+    iframe.addEventListener('load', function(){
+      var form = window._lastFormSubmitted;
+      if (!form) return;
+      clearTimeout(form._newsletterTimeout);
+      var loading = form.querySelector('.loading');
+      var sent = form.querySelector('.sent-message');
+      var submitBtn = form.querySelector('[type="submit"]');
+      if (loading) loading.style.display = 'none';
+      if (sent) sent.style.display = 'block';
+      if (submitBtn) submitBtn.disabled = false;
+      var emailInput = form.querySelector('input[type="email"]');
+      if (emailInput) emailInput.value = '';
+    });
+  })();
+  </script>
 
 </body>
 
