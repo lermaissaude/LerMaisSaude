@@ -273,8 +273,7 @@
           </div>
 
           <div class="col-lg-8">
-            <form id="contact-form" action="https://script.google.com/macros/s/AKfycbxXvIg5EhMV4UhfJSrVWantazova9krfsZ-qPFcj7KSnQ4cgpt53W16Q5m1gdV4cNxlPA/exec" method="post" target="newsletter_iframe" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
-              <input type="hidden" name="page" id="contact-page" value="/">
+            <form action="https://script.google.com/macros/s/AKfycbydm90zln7XwlRjo9QG__a5TkhoCDUKQYFRcMpuGi1fMZLqioxfVHUqspkHZxUc20UajQ/exec" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
               <input type="hidden" name="formType" value="contact">
               <div class="row gy-4">
 
@@ -359,18 +358,17 @@
           <div class="col-lg-4 col-md-12 footer-newsletter">
             <h4>Newsletter</h4>
             <p>Subscreva para receber novidades, lançamentos e convites para testes early-access.</p>
-            <!-- Newsletter agora aponta para o Google Apps Script Web App -->
-            <form id="newsletter-form" action="https://script.google.com/macros/s/AKfycbxXvIg5EhMV4UhfJSrVWantazova9krfsZ-qPFcj7KSnQ4cgpt53W16Q5m1gdV4cNxlPA/exec" method="post" target="newsletter_iframe" class="php-email-form">
+            <!-- Newsletter aponta para o Google Apps Script Web App -->
+            <form action="https://script.google.com/macros/s/AKfycbydm90zln7XwlRjo9QG__a5TkhoCDUKQYFRcMpuGi1fMZLqioxfVHUqspkHZxUc20UajQ/exec" method="post" class="php-email-form">
               <div class="newsletter-form">
-                <input type="email" name="email" id="newsletter-email" placeholder="O seu email" required>
-                <input type="submit" id="newsletter-submit" value="Subscrever">
+                <input type="email" name="email" placeholder="O seu email" required>
+                <input type="hidden" name="formType" value="newsletter">
+                <input type="submit" value="Subscrever">
               </div>
               <div class="loading" style="display:none;">A processar</div>
               <div class="error-message" style="display:none;"></div>
               <div class="sent-message" style="display:none;">Obrigado! Verifique o seu email.</div>
             </form>
-            <!-- iframe oculto para evitar problemas de CORS ao submeter diretamente ao Apps Script -->
-            <iframe name="newsletter_iframe" id="newsletter_iframe" style="display:none;"></iframe>
           </div>
 
         </div>
@@ -404,62 +402,53 @@
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
 
-  <!-- Forms integration script (submete para o Google Apps Script via iframe para evitar CORS) -->
+  <!-- Forms integration script (submete para o Google Apps Script com fetch e tratamento de erro) -->
   <script>
   (function(){
-    var iframe = document.getElementById('newsletter_iframe');
-    if (!iframe) {
-      // fallback: cria iframe se não existir
-      iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.name = 'newsletter_iframe';
-      iframe.id = 'newsletter_iframe';
-      document.body.appendChild(iframe);
-    }
-
-    // Handler para forms que submetem ao Apps Script via iframe
-    var forms = document.querySelectorAll('form[target="newsletter_iframe"]');
+    var forms = document.querySelectorAll('form[action*="script.google.com"]');
     if (!forms || forms.length === 0) return;
 
     forms.forEach(function(form){
       form.addEventListener('submit', function(e){
-        // recorda qual o form que submeteu - usado no evento load do iframe
-        window._lastFormSubmitted = form;
+        e.preventDefault(); // evita submissão normal do form
 
         var loading = form.querySelector('.loading');
         var error = form.querySelector('.error-message');
         var sent = form.querySelector('.sent-message');
         var submitBtn = form.querySelector('[type="submit"]');
 
+        // limpa mensagens anteriores
         if (error) error.style.display = 'none';
         if (sent) sent.style.display = 'none';
         if (loading) loading.style.display = 'block';
         if (submitBtn) submitBtn.disabled = true;
 
-        // fallback: se o iframe não disparar load, mostramos sucesso passado X ms
-        form._newsletterTimeout = setTimeout(function(){
-          if (loading) loading.style.display = 'none';
-          if (sent) sent.style.display = 'block';
-          if (submitBtn) submitBtn.disabled = false;
-          var emailInput = form.querySelector('input[type="email"]');
-          if (emailInput) emailInput.value = '';
-        }, 4000);
-      });
-    });
+        // FormData do form
+        var formData = new FormData(form);
 
-    // quando o iframe carrega, assume-se que o servidor respondeu — mostramos sucesso no último form submetido
-    iframe.addEventListener('load', function(){
-      var form = window._lastFormSubmitted;
-      if (!form) return;
-      clearTimeout(form._newsletterTimeout);
-      var loading = form.querySelector('.loading');
-      var sent = form.querySelector('.sent-message');
-      var submitBtn = form.querySelector('[type="submit"]');
-      if (loading) loading.style.display = 'none';
-      if (sent) sent.style.display = 'block';
-      if (submitBtn) submitBtn.disabled = false;
-      var emailInput = form.querySelector('input[type="email"]');
-      if (emailInput) emailInput.value = '';
+        // tenta fetch com modo no-cors (envio sem ler resposta)
+        fetch(form.action, { method: 'POST', body: formData, mode: 'no-cors' })
+          .then(function(){
+            // fetch sucesso (mesmo com no-cors, o servidor recebeu)
+            setTimeout(function(){
+              if (loading) loading.style.display = 'none';
+              if (sent) sent.style.display = 'block';
+              if (submitBtn) submitBtn.disabled = false;
+              var emailInput = form.querySelector('input[type="email"]');
+              if (emailInput) emailInput.value = '';
+            }, 500);
+          })
+          .catch(function(err){
+            // erro de conectividade - mostra erro
+            console.error('Form submit error:', err);
+            if (loading) loading.style.display = 'none';
+            if (error) {
+              error.textContent = 'Erro ao enviar. Tente novamente.';
+              error.style.display = 'block';
+            }
+            if (submitBtn) submitBtn.disabled = false;
+          });
+      });
     });
   })();
   </script>
