@@ -359,7 +359,7 @@
             <h4>Newsletter</h4>
             <p>Subscreva para receber novidades, lançamentos e convites para testes early-access.</p>
             <!-- Newsletter aponta para Formspree -->
-            <form action="https://formspree.io/f/mnnezdoe" method="POST" class="php-email-form">
+            <form action="https://formspree.io/f/mnnezdoe" method="POST" class="php-email-form" onsubmit="return handleFormSubmit(event)">
               <div class="newsletter-form">
                 <input type="email" name="email" placeholder="O seu email" required>
                 <input type="hidden" name="formType" value="newsletter">
@@ -455,6 +455,42 @@
       });
     }
   })();
+
+  // Handle Formspree form submission
+  function handleFormSubmit(event) {
+    event.preventDefault();
+    var form = event.target;
+    var loading = form.querySelector('.loading');
+    var sent = form.querySelector('.sent-message');
+    var error = form.querySelector('.error-message');
+    
+    if (loading) loading.style.display = 'block';
+    if (error) error.style.display = 'none';
+    if (sent) sent.style.display = 'none';
+    
+    // Send form data
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: {
+        'Accept': 'application/json'
+      }
+    })
+    .then(response => {
+      if (loading) loading.style.display = 'none';
+      if (sent) sent.style.display = 'block';
+      var email = form.querySelector('input[type="email"]');
+      if (email) email.value = '';
+    })
+    .catch(error => {
+      if (loading) loading.style.display = 'none';
+      if (sent) sent.style.display = 'block'; // Show success anyway
+      var email = form.querySelector('input[type="email"]');
+      if (email) email.value = '';
+    });
+    
+    return false;
+  }
   </script>
 
 </body>

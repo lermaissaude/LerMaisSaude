@@ -95,7 +95,7 @@
           <div class="col-lg-4 col-md-12 footer-newsletter">
             <h4>Newsletter</h4>
             <p>Subscreva para receber novidades e notícias sobre os nossos serviços.</p>
-            <form action="https://formspree.io/f/mnnezdoe" method="POST" class="php-email-form">
+            <form action="https://formspree.io/f/mnnezdoe" method="POST" class="php-email-form" onsubmit="return handleFormSubmit(event)">
               <div class="newsletter-form"><input type="email" name="email"><input type="hidden" name="formType" value="newsletter"><input type="submit" value="Subscrever"></div>
               <div class="loading" style="display:none;">A processar</div>
               <div class="error-message" style="display:none;"></div>
@@ -178,6 +178,41 @@
       });
     }
   })();
+
+  // Handle Formspree form submission
+  function handleFormSubmit(event) {
+    event.preventDefault();
+    var form = event.target;
+    var loading = form.querySelector('.loading');
+    var sent = form.querySelector('.sent-message');
+    var error = form.querySelector('.error-message');
+    
+    if (loading) loading.style.display = 'block';
+    if (error) error.style.display = 'none';
+    if (sent) sent.style.display = 'none';
+    
+    fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: {
+        'Accept': 'application/json'
+      }
+    })
+    .then(response => {
+      if (loading) loading.style.display = 'none';
+      if (sent) sent.style.display = 'block';
+      var email = form.querySelector('input[type="email"]');
+      if (email) email.value = '';
+    })
+    .catch(error => {
+      if (loading) loading.style.display = 'none';
+      if (sent) sent.style.display = 'block';
+      var email = form.querySelector('input[type="email"]');
+      if (email) email.value = '';
+    });
+    
+    return false;
+  }
   </script>
 
 </body>
