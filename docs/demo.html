@@ -7,6 +7,13 @@
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
   <link href="assets/css/main.css" rel="stylesheet">
+  <style>
+    /* Small responsive tweaks for demo page */
+    @media (max-width: 767.98px) {
+      #translateBtn { width: 100%; padding-top: 12px; padding-bottom: 12px; }
+      #translationContainer { margin-top: 16px; }
+    }
+  </style>
 
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-LRKT3R7VNR"></script>
@@ -42,8 +49,8 @@
         </div>
 
         <div class="row gy-5" data-aos="fade-up" data-aos-delay="100">
-          <!-- Bloco Input: Relatório Original -->
-          <div class="col-lg-6">
+          <!-- Bloco Input: Relatório Original (com botão de tradução) -->
+          <div class="col-12 col-lg-6">
             <div style="background: #f9f9f9; border: 2px solid #004aad; border-radius: 10px; padding: 30px;">
               <h4 style="color: #004aad; margin-bottom: 20px;"><i class="bi bi-file-earmark-text"></i> Relatório Original</h4>
               <div style="background: white; padding: 20px; border-radius: 8px; font-size: 0.95em; line-height: 1.6; color: #444;">
@@ -60,35 +67,20 @@
                 <p style="margin-top: 15px; font-size: 0.9em; font-style: italic; color: #666;">
                   Conclusão: Alterações metabólicas sugestivas de síndrome metabólica. Recomenda-se avaliação clínica complementar e orientação dietética.
                 </p>
+
+                <div style="text-align:center; margin-top:18px;">
+                  <button id="translateBtn" style="background:#004aad;color:#fff;border:none;padding:10px 22px;border-radius:20px;font-weight:700;cursor:pointer;">Traduzir Relatório</button>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Bloco Output: Explicação Clara -->
-          <div class="col-lg-6">
-            <div style="background: #f0f7ff; border: 2px solid #004aad; border-radius: 10px; padding: 30px;">
+          <!-- Bloco Output: Explicação Clara (inicialmente oculto) -->
+          <div class="col-12 col-lg-6">
+            <div id="translationContainer" style="display:none; background: #f0f7ff; border: 2px solid #004aad; border-radius: 10px; padding: 30px;">
               <h4 style="color: #004aad; margin-bottom: 20px;"><i class="bi bi-chat-left-text"></i> Explicação Clara</h4>
-              <div style="background: white; padding: 20px; border-radius: 8px; font-size: 0.95em; line-height: 1.8; color: #333;">
-                <p><strong style="color: #004aad;">O que isto significa?</strong></p>
-                
-                <p style="margin: 15px 0;">
-                  <strong>Açúcar no sangue (Glicose)</strong><br>
-                  O seu nível está um pouco elevado. Isto pode significar que o seu corpo tem dificuldade em controlar o açúcar. Isto é importante vigiar, pois pode indicar pré-diabetes.
-                </p>
-
-                <p style="margin: 15px 0;">
-                  <strong>Colesterol</strong><br>
-                  Os seus valores de colesterol estão elevados. Tem muito colesterol "mau" (LDL) e pouco colesterol "bom" (HDL). Isto aumenta o risco de problemas no coração.
-                </p>
-
-                <p style="margin: 15px 0;">
-                  <strong>O que fazer agora?</strong><br>
-                  Fale com o seu médico para uma avaliação mais completa. Recomenda-se mudar para uma dieta mais saudável, fazer exercício regularmente e, possivelmente, tomar medicamentos.
-                </p>
-
-                <p style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd; font-size: 0.85em; color: #666; font-style: italic;">
-                  ℹ️ Esta é uma explicação simplificada. Consulte sempre o seu médico para uma interpretação completa.
-                </p>
+              <div id="translationOutput" style="background: white; padding: 20px; border-radius: 8px; font-size: 0.95em; line-height: 1.8; color: #333;">
+                <!-- conteúdo será inserido via JavaScript ao carregar -->
               </div>
             </div>
           </div>
@@ -121,7 +113,7 @@
             </a>
             <p class="mt-2">Ler+Saúde é uma API que transforma relatórios clínicos e exames em explicações claras, com foco em precisão e privacidade.</p>
             <div class="footer-contact pt-3">
-              <p class="mt-1"><strong>Contato:</strong> <span>geral@lersaude.pt</span></p>
+              <p class="mt-1"><strong>Contato:</strong> <span>ler.mais.saude@gmail.com</span></p>
               <p><strong>Telefone:</strong> <span>+351 21 000 0000</span></p>
             </div>
 
@@ -184,6 +176,47 @@
 
   <!-- Main JS File -->
   <script src="assets/js/main.js"></script>
+
+  <script>
+    // Demo translation behaviour: show translation on button click
+    (function(){
+      var btn = null;
+      function insertTranslation() {
+        var out = document.getElementById('translationOutput');
+          if (!out) return;
+          out.innerHTML = '\n                <p><strong style="color: #004aad;">O que isto significa?</strong></p>\n                <p style="margin: 15px 0;"><strong>Açúcar no sangue (Glicose)</strong><br>O seu nível está um pouco elevado. Isto pode significar que o seu corpo tem dificuldade em controlar o açúcar. Isto é importante vigiar, pois pode indicar pré-diabetes.</p>\n                <p style="margin: 15px 0;"><strong>Colesterol</strong><br>Os seus valores de colesterol estão elevados. Tem muito colesterol "mau" (LDL) e pouco colesterol "bom" (HDL). Isto aumenta o risco de problemas no coração.</p>\n                <p style="margin: 15px 0;"><strong>O que fazer agora?</strong><br>Fale com o seu médico para uma avaliação mais completa. Recomenda-se mudar para uma dieta mais saudável, fazer exercício regularmente e, possivelmente, tomar medicamentos.</p>\n                <p style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd; font-size: 0.85em; color: #666; font-style: italic;">ℹ️ Esta é uma explicação simplificada. Consulte sempre o seu médico para uma interpretação completa.</p>\n';
+      }
+
+      function showTranslation() {
+        var container = document.getElementById('translationContainer');
+        if (!container) return;
+        container.style.display = 'block';
+        // simple animation
+        container.style.opacity = 0;
+        var op = 0;
+        var t = setInterval(function(){ op += 0.1; container.style.opacity = op; if (op>=1) clearInterval(t); }, 30);
+        // scroll into view on small screens
+        setTimeout(function(){ container.scrollIntoView({behavior:'smooth', block:'center'}); }, 200);
+      }
+
+      window.addEventListener('load', function(){
+        btn = document.getElementById('translateBtn');
+        if (!btn) return;
+        btn.addEventListener('click', function(){
+          btn.disabled = true;
+          var origText = btn.innerText;
+          btn.innerText = 'A traduzir...';
+          // simulate translation delay
+          setTimeout(function(){
+            insertTranslation();
+            showTranslation();
+            btn.innerText = origText;
+            btn.disabled = false;
+          }, 800);
+        });
+      });
+    })();
+  </script>
 
   <!-- Forms integration script - submissão via iframe (sem CORS) -->
   <iframe name="form_iframe" id="form_iframe" style="display:none;"></iframe>
